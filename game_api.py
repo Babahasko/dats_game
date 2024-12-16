@@ -22,7 +22,7 @@ class GameAPI:
         response = requests.get(url, headers=self.headers)
         return response.json()
 
-    def unit_command(self, commands):
+    def ship_command(self, commands):
         """Отправить команды для управления юнитами"""
         url = f"{self.base_url}/api/shipCommand"
         payload = {"ships": commands}
