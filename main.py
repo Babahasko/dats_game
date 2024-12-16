@@ -6,7 +6,6 @@ import time
 api = GameAPI()
 
 def main():
-    # Регистрация на матч
     registration_result = api.register_death_match()
     if not registration_result.get("success"):
         print("Ошибка регистрации:", registration_result.get("errors"))
@@ -41,5 +40,4 @@ def main():
             print("Выход из игры...")
             break
 
-    # Выход из матча
     api.exit_death_match()
