@@ -1,4 +1,6 @@
 __all__ = (
-    "settings"
+    "settings",
+    "logger"
 )
 from .config import settings
+from .logger import logger
