@@ -10,17 +10,19 @@ api = GameAPI()
 def main():
     registration_result = api.register_death_match()
     if not registration_result.get("success"):
-        logger.info("Ошибка регистрации:", registration_result.get("errors"))
+        logger.info(f"Ошибка регистрации:, {registration_result.get("errors")}")
         return
 
-    logger.info("Регистрация успешна!")
+    logger.info(f"Регистрация успешна!")
 
-    while True:
+    in_game=True
+
+    while in_game:
         try:
             # Получение данных о текущем состоянии игры
             scan_result = api.scan()
             if not scan_result.get("success"):
-                logger.info("Ошибка сканирования:", scan_result.get("errors"))
+                logger.info(f"Ошибка сканирования:, {scan_result.get('errors')}")
                 break
 
             # Отображение данных
@@ -32,14 +34,15 @@ def main():
             # Отправка команд
             command_result = api.ship_command(commands)
             if not command_result.get("success"):
-                print("Ошибка отправки команд:", command_result.get("errors"))
+                logger.info(f"Ошибка отправки команд:, {command_result.get("errors")}")
                 break
 
             # Ожидание следующего тика
-            time.sleep(3)
+            time.sleep(1)
+            in_game=False
 
         except KeyboardInterrupt:
-            print("Выход из игры...")
+            logger.info(f"Выход из игры...")
             break
 
     api.exit_death_match()
