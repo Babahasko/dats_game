@@ -1,8 +1,8 @@
-from config import SERVER_URL, API_KEY
+from utils import settings
 import requests
 
 class GameAPI:
-    def __init__(self, api_key=API_KEY, base_url=SERVER_URL):
+    def __init__(self, api_key=settings.api.api_key, base_url=settings.api.server_url):
         self.api_key = api_key
         self.base_url = base_url
         self.headers = {

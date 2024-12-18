@@ -1,4 +1,4 @@
-from game_api import GameAPI
+from api import GameAPI
 from logic import generate_commands
 from display import display_game_state
 import time
