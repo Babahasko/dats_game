@@ -1,6 +1,8 @@
 from api import GameAPI
 from logic import generate_commands
 from display import display_game_state
+from utils import logger
+
 import time
 
 api = GameAPI()
@@ -8,17 +10,17 @@ api = GameAPI()
 def main():
     registration_result = api.register_death_match()
     if not registration_result.get("success"):
-        print("Ошибка регистрации:", registration_result.get("errors"))
+        logger.info("Ошибка регистрации:", registration_result.get("errors"))
         return
 
-    print("Регистрация успешна!")
+    logger.info("Регистрация успешна!")
 
     while True:
         try:
             # Получение данных о текущем состоянии игры
             scan_result = api.scan()
             if not scan_result.get("success"):
-                print("Ошибка сканирования:", scan_result.get("errors"))
+                logger.info("Ошибка сканирования:", scan_result.get("errors"))
                 break
 
             # Отображение данных
