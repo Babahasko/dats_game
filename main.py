@@ -18,8 +18,6 @@ def main():
     except Exception as e:
         logger.info(f"Ошибка регистрации")
 
-
-
     logger.info(f"Регистрация успешна!")
 
     in_game=True
