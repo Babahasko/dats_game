@@ -18,6 +18,8 @@ def main():
     except Exception as e:
         logger.info(f"Ошибка регистрации")
         logger.info('Hello Kolyan')
+        logger.info('Hello Danya')
+
 
     logger.info(f"Регистрация успешна!")
 
