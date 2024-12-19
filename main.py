@@ -19,6 +19,7 @@ def main():
         logger.info(f"Ошибка регистрации")
         logger.info('Hello Kolyan')
         logger.info('Hello Danya')
+        logger.info('Hello Danya')
 
 
     logger.info(f"Регистрация успешна!")
