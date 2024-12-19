@@ -1,14 +1,15 @@
-# from unittest.mock import patch
-# import pytest
-#
-# from api import GameAPI
-# from utils import settings
-#
-#
-# import pytest
-# from unittest.mock import MagicMock
-# from main import main
-#
+import pytest
+
+from api import GameAPI
+from utils import settings
+
+def test_registration_api(mocker):
+    game_api = GameAPI()
+    mock_response = {'data': [0,0,0,0,0,0], 'ships': ['1123', 'abcd']}
+    mocker.patch.object(game_api, 'get_map', return_value=mock_response)
+
+    assert game_api.get_map() == mock_response
+
 # @pytest.fixture
 # def mock_api(mocker):
 #     api = MagicMock()

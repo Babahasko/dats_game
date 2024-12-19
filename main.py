@@ -8,10 +8,15 @@ import time
 api = GameAPI()
 
 def main():
-    registration_result = api.register_death_match()
-    if not registration_result.get("success"):
-        logger.info(f"Ошибка регистрации:, {registration_result.get("errors")}")
-        return
+    # Пытаемся зарегаться
+    logger.info('Запуск бота')
+    try:
+        registration_result = api.register_death_match()
+        if not registration_result.get("success"):
+            logger.info(f"Ошибка регистрации")
+            # logger.info(f"Ошибка регистрации:, {registration_result.get("errors")}")
+    except Exception as e:
+        logger.info(f"Ошибка регистрации")
 
     logger.info(f"Регистрация успешна!")
 
@@ -46,3 +51,6 @@ def main():
             break
 
     api.exit_death_match()
+
+if __name__ == "__main__":
+    main()

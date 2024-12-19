@@ -14,5 +14,3 @@ class Settings(BaseSettings):
     api: ApiConfig = ApiConfig(api_key=os.getenv("API_KEY"), server_url=os.getenv("SERVER_URL"))
 
 settings = Settings()
-
-

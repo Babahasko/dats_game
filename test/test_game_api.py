@@ -3,7 +3,7 @@ from unittest.mock import patch, MagicMock
 
 from utils import settings
 from api import GameAPI
-
+from utils import logger
 
 @pytest.fixture
 def game_api():
@@ -11,6 +11,7 @@ def game_api():
 
 @patch('requests.get')
 def test_get_map(mock_get, game_api):
+
     # Подготовка мока
     mock_response = MagicMock()
     mock_response.json.return_value = {"map": "battlefield"}
