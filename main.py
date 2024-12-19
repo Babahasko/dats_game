@@ -17,6 +17,7 @@ def main():
             # logger.info(f"Ошибка регистрации:, {registration_result.get("errors")}")
     except Exception as e:
         logger.info(f"Ошибка регистрации")
+        logger.info('Hello Kolyan')
 
     logger.info(f"Регистрация успешна!")
 
