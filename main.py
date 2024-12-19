@@ -20,6 +20,7 @@ def main():
         logger.info('Hello Kolyan')
         logger.info('Hello Danya')
         logger.info('Hello Danya')
+        logger.info('Hello Danya')
 
 
     logger.info(f"Регистрация успешна!")
