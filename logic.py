@@ -1,15 +1,14 @@
-def generate_commands(scan_result):
-    """Генерация команд для управления"""
-    commands = []
-    for ship in scan_result["scan"]["myShips"]:
-        # Пример: каждый корабль движется вперед со скоростью 1
-        commands.append({
-            "ship_id": ship["id"],
-            "speed": 1,
-            "direction": ship["direction"]
-        })
-    return commands
-
+# def generate_commands(scan_result):
+#     """Генерация команд для управления"""
+#     commands = []
+#     for ship in scan_result["scan"]["myShips"]:
+#         # Пример: каждый корабль движется вперед со скоростью 1
+#         commands.append({
+#             "ship_id": ship["id"],
+#             "speed": 1,
+#             "direction": ship["direction"]
+#         })
+#     return commands
 
 import heapq
 import math
@@ -39,15 +38,19 @@ def heuristic(a, b):
 
 # Алгоритм A* для поиска пути в трехмерном пространстве
 def a_star(start, goal, grid):
+    # Преобразуем списки в объекты Node
+    start_node = Node(*start)
+    goal_node = Node(*goal)
+
     # Очередь с приоритетом
     open_set = []
-    heapq.heappush(open_set, (0, start))
+    heapq.heappush(open_set, (0, start_node))
 
     # Словарь для хранения стоимости пути до каждого узла
-    g_score = {start: 0}
+    g_score = {start_node: 0}
 
     # Словарь для хранения оценки f(n) для каждого узла
-    f_score = {start: heuristic(start, goal)}
+    f_score = {start_node: heuristic(start_node, goal_node)}
 
     # Словарь для хранения предыдущих узлов (для восстановления пути)
     came_from = {}
@@ -57,12 +60,12 @@ def a_star(start, goal, grid):
         current = heapq.heappop(open_set)[1]
 
         # Если достигли цели
-        if current == goal:
+        if current == goal_node:
             path = []
             while current in came_from:
                 path.append(current)
                 current = came_from[current]
-            path.append(start)
+            path.append(start_node)
             return path[::-1]  # Возвращаем путь в правильном порядке
 
         # Проверяем соседей
@@ -82,7 +85,7 @@ def a_star(start, goal, grid):
                 if tentative_g_score < g_score.get(neighbor, float('inf')):
                     came_from[neighbor] = current
                     g_score[neighbor] = tentative_g_score
-                    f_score[neighbor] = tentative_g_score + heuristic(neighbor, goal)
+                    f_score[neighbor] = tentative_g_score + heuristic(neighbor, goal_node)
                     heapq.heappush(open_set, (f_score[neighbor], neighbor))
 
     # Если путь не найден
@@ -110,18 +113,18 @@ if __name__ == "__main__":
         ]
     ]
 
-    # Начальная позиция змейки
-    start = Node(0, 0, 0)
+    # Начальная позиция змейки (в виде списка)
+    start_position = [0, 0, 0]
 
-    # Позиция еды
-    goal = Node(2, 2, 2)
+    # Позиция еды (в виде списка)
+    goal_position = [2, 2, 2]
 
     # Находим путь
-    path = a_star(start, goal, grid)
+    path = a_star(start_position, goal_position, grid)
 
     if path:
         print("Путь найден:")
         for node in path:
             print(f"({node.x}, {node.y}, {node.z})")
     else:
-        print("Путь не найден")
+        print("Путь не найден"))
