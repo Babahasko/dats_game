@@ -10,7 +10,7 @@
 #         })
 #     return commands
 
-import time
+# import time
 
 def get_directions_for_snakes(game_state):
     moves = {"snakes": []}
