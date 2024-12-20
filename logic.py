@@ -10,6 +10,7 @@
 #         })
 #     return commands
 
+
 # Функция для отправки направления движения змейки
 def send_move(direction):
     pass
@@ -17,14 +18,14 @@ def send_move(direction):
 # Функция для выбора направления движения
 def choose_direction(game_state):
     # Получаем текущее положение змейки
-    snake_position = game_state['snake']['position']
+    snake_position = game_state.snakes
 
     # Получаем положение еды
-    food_position = game_state['food']['position']
+    food_position = game_state.food
 
     # Получаем положение препятствий и других игроков
-    obstacles = game_state['obstacles']
-    players = game_state['players']
+    obstacles = game_state.fences
+    players = game_state.enemies
 
     # Вычисляем направление к еде
     direction_to_food = {
@@ -71,7 +72,7 @@ def choose_direction(game_state):
 def game_loop():
     while True:
         # Получаем текущее состояние игры
-        game_state = get_game_state()
+        game_state = GameState(response)
 
         if game_state is None:
             break
