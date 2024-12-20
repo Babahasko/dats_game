@@ -1,5 +1,7 @@
 __all__ = (
-    "GameAPI"
+    "GameAPI",
+    "GameState",
 )
 
 from .game_api import GameAPI
+from .gamestate_parser import GameState
