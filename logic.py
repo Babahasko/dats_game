@@ -10,121 +10,88 @@
 #         })
 #     return commands
 
-import heapq
-import math
+# Функция для отправки направления движения змейки
+def send_move(direction):
+    pass
 
+# Функция для выбора направления движения
+def choose_direction(game_state):
+    # Получаем текущее положение змейки
+    snake_position = game_state['snake']['position']
 
-# Класс для представления узла в трехмерном пространстве
-class Node:
-    def __init__(self, x, y, z):
-        self.x = x
-        self.y = y
-        self.z = z
+    # Получаем положение еды
+    food_position = game_state['food']['position']
 
-    def __eq__(self, other):
-        return self.x == other.x and self.y == other.y and self.z == other.z
+    # Получаем положение препятствий и других игроков
+    obstacles = game_state['obstacles']
+    players = game_state['players']
 
-    def __hash__(self):
-        return hash((self.x, self.y, self.z))
+    # Вычисляем направление к еде
+    direction_to_food = {
+        'x': food_position['x'] - snake_position['x'],
+        'y': food_position['y'] - snake_position['y'],
+        'z': food_position['z'] - snake_position['z']
+    }
 
-    def __lt__(self, other):
-        return False  # Для работы с heapq
-
-
-# Функция для вычисления эвристики (евклидово расстояние)
-def heuristic(a, b):
-    return math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2 + (a.z - b.z) ** 2)
-
-
-# Алгоритм A* для поиска пути в трехмерном пространстве
-def a_star(start, goal, grid):
-    # Преобразуем списки в объекты Node
-    start_node = Node(*start)
-    goal_node = Node(*goal)
-
-    # Очередь с приоритетом
-    open_set = []
-    heapq.heappush(open_set, (0, start_node))
-
-    # Словарь для хранения стоимости пути до каждого узла
-    g_score = {start_node: 0}
-
-    # Словарь для хранения оценки f(n) для каждого узла
-    f_score = {start_node: heuristic(start_node, goal_node)}
-
-    # Словарь для хранения предыдущих узлов (для восстановления пути)
-    came_from = {}
-
-    while open_set:
-        # Извлекаем узел с наименьшим f(n)
-        current = heapq.heappop(open_set)[1]
-
-        # Если достигли цели
-        if current == goal_node:
-            path = []
-            while current in came_from:
-                path.append(current)
-                current = came_from[current]
-            path.append(start_node)
-            return path[::-1]  # Возвращаем путь в правильном порядке
-
-        # Проверяем соседей
-        for dx, dy, dz in [(-1, 0, 0), (1, 0, 0), (0, -1, 0), (0, 1, 0), (0, 0, -1), (0, 0, 1)]:
-            neighbor = Node(current.x + dx, current.y + dy, current.z + dz)
-
-            # Проверяем, что сосед находится в пределах сетки и не занят
-            if (0 <= neighbor.x < len(grid) and
-                    0 <= neighbor.y < len(grid[0]) and
-                    0 <= neighbor.z < len(grid[0][0]) and
-                    grid[neighbor.x][neighbor.y][neighbor.z] == 0):
-
-                # Вычисляем стоимость пути до соседа
-                tentative_g_score = g_score[current] + 1
-
-                # Если найден лучший путь к соседу
-                if tentative_g_score < g_score.get(neighbor, float('inf')):
-                    came_from[neighbor] = current
-                    g_score[neighbor] = tentative_g_score
-                    f_score[neighbor] = tentative_g_score + heuristic(neighbor, goal_node)
-                    heapq.heappush(open_set, (f_score[neighbor], neighbor))
-
-    # Если путь не найден
-    return None
-
-
-# Пример использования
-if __name__ == "__main__":
-    # Создаем трехмерную сетку (0 - свободно, 1 - занято)
-    grid = [
-        [
-            [0, 0, 0],
-            [0, 1, 0],
-            [0, 0, 0]
-        ],
-        [
-            [0, 1, 0],
-            [1, 0, 1],
-            [0, 1, 0]
-        ],
-        [
-            [0, 0, 0],
-            [0, 1, 0],
-            [0, 0, 0]
-        ]
+    # Определяем возможные направления движения
+    possible_directions = [
+        {'x': 1, 'y': 0, 'z': 0},
+        {'x': -1, 'y': 0, 'z': 0},
+        {'x': 0, 'y': 1, 'z': 0},
+        {'x': 0, 'y': -1, 'z': 0},
+        {'x': 0, 'y': 0, 'z': 1},
+        {'x': 0, 'y': 0, 'z': -1}
     ]
 
-    # Начальная позиция змейки (в виде списка)
-    start_position = [0, 0, 0]
+    # Фильтруем направления, которые приведут к столкновению с препятствиями или другими игроками
+    safe_directions = []
+    for direction in possible_directions:
+        new_position = {
+            'x': snake_position['x'] + direction['x'],
+            'y': snake_position['y'] + direction['y'],
+            'z': snake_position['z'] + direction['z']
+        }
+        if new_position not in obstacles and new_position not in players:
+            safe_directions.append(direction)
 
-    # Позиция еды (в виде списка)
-    goal_position = [2, 2, 2]
+    # Выбираем направление, которое ближе всего к еде
+    best_direction = None
+    best_distance = float('inf')
+    for direction in safe_directions:
+        distance = abs(direction_to_food['x'] - direction['x']) + abs(direction_to_food['y'] - direction['y']) + abs(
+            direction_to_food['z'] - direction['z'])
+        if distance < best_distance:
+            best_distance = distance
+            best_direction = direction
 
-    # Находим путь
-    path = a_star(start_position, goal_position, grid)
+    return best_direction
 
-    if path:
-        print("Путь найден:")
-        for node in path:
-            print(f"({node.x}, {node.y}, {node.z})")
-    else:
-        print("Путь не найден")
+
+# Основной цикл игры
+def game_loop():
+    while True:
+        # Получаем текущее состояние игры
+        game_state = get_game_state()
+
+        if game_state is None:
+            break
+
+        # Выбираем направление движения
+        direction = choose_direction(game_state)
+
+        if direction is None:
+            print("Нет безопасных направлений для движения")
+            break
+
+        # Отправляем направление движения
+        response = send_move(direction)
+
+        if response is None:
+            break
+
+        # Пауза для следующего хода
+        time.sleep(1)
+
+
+# Запуск игры
+# game_loop()
