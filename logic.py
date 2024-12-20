@@ -52,9 +52,9 @@ def send_moves(moves):
 def choose_direction(snake_position, food_position, fences, players):
     # Вычисляем направление к еде
     direction_to_food = {
-        'x': food_position['x'] - snake_position['x'],
-        'y': food_position['y'] - snake_position['y'],
-        'z': food_position['z'] - snake_position['z']
+        'x': food_position[0] - snake_position[0],
+        'y': food_position[1] - snake_position[1],
+        'z': food_position[2] - snake_position[2]
     }
 
     # Определяем возможные направления движения
