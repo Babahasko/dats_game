@@ -11,7 +11,6 @@
 #     return commands
 
 import time
-SNAKE_IDS = ["snake_id_1", "snake_id_2", "snake_id_3"]
 
 def get_directions_for_snakes(game_state):
     moves = {"snakes": []}
@@ -22,7 +21,7 @@ def get_directions_for_snakes(game_state):
         players = game_state.enemies
         direction = choose_direction(snake_position, food_position, fences, players)
         moves["snakes"].append({
-            "id": snake_id,
+            "id": snake.id,
             "direction": [direction['x'], direction['y'], direction['z']]
         })
     return moves
@@ -94,51 +93,52 @@ def choose_direction(snake_position, food_position, fences, players):
 
 # Основной цикл игры
 def game_loop():
-    while True:
-        # Получаем текущее состояние игры
-        game_state = get_game_state()
-
-        if game_state is None:
-            break
-
-        # Создаём список для хранения направлений всех змеек
-        moves = {"snakes": []}
-
-        # Обрабатываем каждую змейку
-        for snake_id in SNAKE_IDS:
-            # Находим данные текущей змейки
-            snake = next((s for s in game_state['snakes'] if s['id'] == snake_id), None)
-            # if snake is None:
-            #     print(f"Змейка с ID {snake_id} не найдена в состоянии игры")
-            #     continue
-
-            # Получаем положение змейки, еды, препятствий и других игроков
-            snake_position = game_state.snakes
-            food_position = game_state.food
-            fences = game_state.fences
-            players = game_state.enemies
-
-            # Выбираем направление движения для текущей змейки
-            direction = choose_direction(snake_position, food_position, fences, players)
-
-            if direction is None:
-                print(f"Нет безопасных направлений для движения змейки {snake_id}")
-                continue
-
-            # Добавляем направление в список
-            moves["snakes"].append({
-                "id": snake_id,
-                "direction": [direction['x'], direction['y'], direction['z']]
-            })
-
-        # Отправляем направления движения всех змеек
-        response = send_moves(moves)
-
-        if response is None:
-            break
-
-        # Пауза для следующего хода
-        time.sleep(1)
+    pass
+    # while True:
+    #     # Получаем текущее состояние игры
+    #     game_state = get_game_state()
+    #
+    #     if game_state is None:
+    #         break
+    #
+    #     # Создаём список для хранения направлений всех змеек
+    #     moves = {"snakes": []}
+    #
+    #     # Обрабатываем каждую змейку
+    #     for snake_id in SNAKE_IDS:
+    #         # Находим данные текущей змейки
+    #         snake = next((s for s in game_state['snakes'] if s['id'] == snake_id), None)
+    #         # if snake is None:
+    #         #     print(f"Змейка с ID {snake_id} не найдена в состоянии игры")
+    #         #     continue
+    #
+    #         # Получаем положение змейки, еды, препятствий и других игроков
+    #         snake_position = game_state.snakes
+    #         food_position = game_state.food
+    #         fences = game_state.fences
+    #         players = game_state.enemies
+    #
+    #         # Выбираем направление движения для текущей змейки
+    #         direction = choose_direction(snake_position, food_position, fences, players)
+    #
+    #         if direction is None:
+    #             print(f"Нет безопасных направлений для движения змейки {snake_id}")
+    #             continue
+    #
+    #         # Добавляем направление в список
+    #         moves["snakes"].append({
+    #             "id": snake_id,
+    #             "direction": [direction['x'], direction['y'], direction['z']]
+    #         })
+    #
+    #     # Отправляем направления движения всех змеек
+    #     response = send_moves(moves)
+    #
+    #     if response is None:
+    #         break
+    #
+    #     # Пауза для следующего хода
+    #     time.sleep(1)
 
 
 # Запуск игры
