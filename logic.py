@@ -127,4 +127,4 @@ if __name__ == "__main__":
         for node in path:
             print(f"({node.x}, {node.y}, {node.z})")
     else:
-        print("Путь не найден"))
+        print("Путь не найден")
