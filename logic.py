@@ -9,7 +9,7 @@
 #             "direction": ship["direction"]
 #         })
 #     return commands
-
+import time
 
 # Функция для отправки направления движения змейки
 def send_move(direction):
