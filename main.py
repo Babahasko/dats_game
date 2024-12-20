@@ -15,7 +15,7 @@ async def main():
     logger.info(f"{direction_response}")
     game_state = GameState(direction_response)
     logger.info(f"game_state.snakes = {game_state.snakes}")
-
+    logger.info(f"{game_state.snakes}")
 
     #Получение раундов
     # game_rounds = await game_api.get_game_rounds()
