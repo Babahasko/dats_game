@@ -18,6 +18,7 @@ async def main():
         game_state = GameState(direction_response)
         directions = get_directions_for_snakes(game_state)
         logger.info(f"{directions}")
+
     #Получение раундов
     # game_rounds = await game_api.get_game_rounds()
 
