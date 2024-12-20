@@ -1,27 +1,16 @@
-# def generate_commands(scan_result):
-#     """Генерация команд для управления"""
-#     commands = []
-#     for ship in scan_result["scan"]["myShips"]:
-#         # Пример: каждый корабль движется вперед со скоростью 1
-#         commands.append({
-#             "ship_id": ship["id"],
-#             "speed": 1,
-#             "direction": ship["direction"]
-#         })
-#     return commands
-
-# import time
 
 def get_directions_for_snakes(game_state):
     moves = {"snakes": []}
-    for snake in game_state.snakes:
-        snake_position = game_state.snakes
-        food_position = game_state.food
+    for index, snake in enumerate(game_state.snakes):
+        # snake_position = game_state.snakes
+        snake_position = snake['direction']
+        food_position = game_state.food[0]['c']
         fences = game_state.fences
         players = game_state.enemies
         direction = choose_direction(snake_position, food_position, fences, players)
+
         moves["snakes"].append({
-            "id": snake.id,
+            "id": snake['id'],
             "direction": [direction['x'], direction['y'], direction['z']]
         })
     return moves
@@ -71,9 +60,9 @@ def choose_direction(snake_position, food_position, fences, players):
     safe_directions = []
     for direction in possible_directions:
         new_position = {
-            'x': snake_position['x'] + direction['x'],
-            'y': snake_position['y'] + direction['y'],
-            'z': snake_position['z'] + direction['z']
+            'x': snake_position[0] + direction['x'],
+            'y': snake_position[1] + direction['y'],
+            'z': snake_position[2] + direction['z']
         }
         if new_position not in fences and new_position not in players:
             safe_directions.append(direction)
