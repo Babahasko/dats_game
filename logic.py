@@ -13,6 +13,20 @@
 import time
 SNAKE_IDS = ["snake_id_1", "snake_id_2", "snake_id_3"]
 
+def get_directions_for_snakes(game_state):
+    moves = {"snakes": []}
+    for snake in game_state.snakes:
+        snake_position = game_state.snakes
+        food_position = game_state.food
+        fences = game_state.fences
+        players = game_state.enemies
+        direction = choose_direction(snake_position, food_position, fences, players)
+        moves["snakes"].append({
+            "id": snake_id,
+            "direction": [direction['x'], direction['y'], direction['z']]
+        })
+    return moves
+
 # Функция для получения текущего состояния игры
 def get_game_state():
     pass
@@ -36,7 +50,7 @@ def send_moves(moves):
 
 
 # Функция для выбора направления движения для одной змейки
-def choose_direction(snake_position, food_position, obstacles, players):
+def choose_direction(snake_position, food_position, fences, players):
     # Вычисляем направление к еде
     direction_to_food = {
         'x': food_position['x'] - snake_position['x'],
@@ -62,7 +76,7 @@ def choose_direction(snake_position, food_position, obstacles, players):
             'y': snake_position['y'] + direction['y'],
             'z': snake_position['z'] + direction['z']
         }
-        if new_position not in obstacles and new_position not in players:
+        if new_position not in fences and new_position not in players:
             safe_directions.append(direction)
 
     # Выбираем направление, которое ближе всего к еде
@@ -101,11 +115,11 @@ def game_loop():
             # Получаем положение змейки, еды, препятствий и других игроков
             snake_position = game_state.snakes
             food_position = game_state.food
-            obstacles = game_state.fences
+            fences = game_state.fences
             players = game_state.enemies
 
             # Выбираем направление движения для текущей змейки
-            direction = choose_direction(snake_position, food_position, obstacles, players)
+            direction = choose_direction(snake_position, food_position, fences, players)
 
             if direction is None:
                 print(f"Нет безопасных направлений для движения змейки {snake_id}")
