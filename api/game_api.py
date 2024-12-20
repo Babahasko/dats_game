@@ -19,11 +19,11 @@ class GameAPI:
         json_payload = json.dumps(payload)
         async with aiohttp.ClientSession() as session:
             async with session.post(url, headers=self.headers, data=json_payload) as response:
-                return await response.text()
+                return await response.json()
 
     async def get_game_rounds(self):
         """Получить расписание раундов"""
         url = f"{self.base_url}/rounds/snake3d"
         async with aiohttp.ClientSession() as session:
             async with session.get(url, headers=self.headers) as response:
-                return await response.text()
+                return await response.json()
