@@ -1,15 +1,62 @@
 from utils import logger
+
+import math
+
+
+def find_nearest_food(snake_position, food_list):
+    """
+    Находит координаты ближайшей еды из списка.
+
+    :param snake_position: Координаты змейки в виде списка [x, y, z].
+    :param food_list: Список координат еды в виде списка списков [[x1, y1, z1], [x2, y2, z2], ...].
+    :return: Координаты ближайшей еды в виде списка [x, y, z].
+    """
+    if not food_list:
+        return None  # Если список еды пуст, возвращаем None
+
+    # Инициализируем минимальное расстояние и ближайшую еду
+    min_distance = float('inf')
+    nearest_food = None
+
+    # Проходим по всем координатам еды
+    for food in food_list:
+        # Вычисляем евклидово расстояние между змейкой и едой
+        distance = math.sqrt(
+            (snake_position[0] - food[0]) ** 2 +
+            (snake_position[1] - food[1]) ** 2 +
+            (snake_position[2] - food[2]) ** 2
+        )
+
+        # Если текущее расстояние меньше минимального, обновляем минимальное расстояние и ближайшую еду
+        if distance < min_distance:
+            min_distance = distance
+            nearest_food = food
+
+    return nearest_food
+
 def get_directions_for_snakes(game_state):
     moves = {"snakes": []}
     try:
         for index, snake in enumerate(game_state.snakes):
             snake_position = game_state.snakes[index]['geometry']
             snake_position = snake_position[0]
-            # logger.info(snake_position)
+            # logger.info(game_state.snakes)
             food_position = game_state.food[0]['c']
+
+            # Находим ближайшую еду
+            # logger.debug(game_state.food)
+            result = [item['c'] for item in game_state.food]
+            # logger.info(result)
+            nearest_food = find_nearest_food(snake_position, result)
+
+            # Выводим результат
+            print("Ближайшая еда:", nearest_food)
+            logger.info(nearest_food)
+
             fences = game_state.fences
             players = game_state.enemies
-            direction = choose_direction(snake_position, food_position, fences, players)
+            # direction = choose_direction(snake_position, food_position, fences, players)
+            direction = choose_direction(snake_position, nearest_food, fences, players)
 
             moves["snakes"].append({
                 "id": snake['id'],
