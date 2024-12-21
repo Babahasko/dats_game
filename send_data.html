@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket JSON Client</title>
+</head>
+<body>
+    <h1>WebSocket JSON Client</h1>
+    <pre id="output"></pre>
+
+    <script>
+        // Подключаемся к WebSocket серверу
+        const socket = new WebSocket('ws://localhost:8765');
+
+        // Обрабатываем входящие сообщения
+        socket.onmessage = function (event) {
+            // Преобразуем полученную строку в JSON
+            const jsonData = JSON.parse(event.data);
+
+            // Отображаем JSON данные в браузере
+            document.getElementById('output').textContent = JSON.stringify(jsonData, null, 2);
+        };
+
+        // Обрабатываем ошибки WebSocket
+        socket.onerror = function (error) {
+            console.error('WebSocket error:', error);
+        };
+
+        // Обрабатываем закрытие соединения
+        socket.onclose = function () {
+            console.log('WebSocket connection closed');
+        };
+    </script>
+</body>
+</html>

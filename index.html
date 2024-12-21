@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>3D Online Data Visualization</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js"></script>
+</head>
+<body>
+    <script>
+        // Создаем сцену
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Создаем геометрию точек
+        const geometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(100000 * 3); // Максимальное количество точек
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        const material = new THREE.PointsMaterial({ color: 0xff0000, size: 0.1 });
+        const pointCloud = new THREE.Points(geometry, material);
+        scene.add(pointCloud);
+
+        // Настройка камеры
+        camera.position.z = 20;
+
+        // Анимация
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Подключение к WebSocket-серверу
+        const socket = new WebSocket('ws://localhost:8765');
+
+        let pointIndex = 0; // Индекс для добавления точек
+
+        socket.onmessage = function (event) {
+            // Получаем данные от сервера
+            const data = event.data.split(',');
+            const x = parseFloat(data[0]);
+            const y = parseFloat(data[1]);
+            const z = parseFloat(data[2]);
+
+            // Добавляем точку в буфер
+            positions[pointIndex * 3] = x;
+            positions[pointIndex * 3 + 1] = y;
+            positions[pointIndex * 3 + 2] = z;
+
+            pointIndex++;
+
+            // Обновляем геометрию
+            geometry.attributes.position.needsUpdate = true;
+
+            // Если достигли максимального количества точек, сбрасываем индекс
+            if (pointIndex >= 100000) {
+                pointIndex = 0;
+            }
+        };
+
+        socket.onclose = function () {
+            console.log('WebSocket connection closed');
+        };
+
+        socket.onerror = function (error) {
+            console.error('WebSocket error:', error);
+        };
+    </script>
+</body>
+</html>
