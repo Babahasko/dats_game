@@ -79,6 +79,7 @@ async def main():
             else:
                 in_game = False
                 print(direction_response)
+
         except KeyboardInterrupt:
             print("Цикл остановлен пользователем.")
             break
