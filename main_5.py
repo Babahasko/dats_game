@@ -25,7 +25,7 @@ async def send_game_state(game_state):
     """
     if connected_clients:
         for client in connected_clients:
-            await client.send(str(game_state.fences))
+            await client.send(str(game_state.snakes))
 
 async def websocket_server(websocket):
     """
