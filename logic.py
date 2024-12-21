@@ -50,8 +50,8 @@ def get_directions_for_snakes(game_state):
             nearest_food = find_nearest_food(snake_position, result)
 
             # Выводим результат
-            print("Ближайшая еда:", nearest_food)
-            logger.info(nearest_food)
+            # print("Ближайшая еда:", nearest_food)
+            # logger.info(nearest_food)
 
             fences = game_state.fences
             players = game_state.enemies
