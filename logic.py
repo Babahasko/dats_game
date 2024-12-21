@@ -1,4 +1,4 @@
-# test
+# test #
 def get_directions_for_snakes(game_state):
     moves = {"snakes": []}
     for index, snake in enumerate(game_state.snakes):
