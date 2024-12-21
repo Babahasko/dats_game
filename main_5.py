@@ -7,25 +7,26 @@ import dash
 from dash import dcc, html
 from dash.dependencies import Input, Output, State
 import plotly.graph_objs as go
+import json
 
 from api import GameAPI, GameState
 from logic import get_directions_for_snakes
 from utils import create_data_for_visualize, create_data_for_visualize_2
 from utils import logger
-from utils import get_error_and_parse
+from utils import get_error_and_parse, convert_data_for_visual
 
 game_api = GameAPI()
 
 # Словарь для хранения подключенных клиентов
 connected_clients = set()
 
-async def send_game_state(game_state):
+async def send_game_state(visual_data):
     """
     Отправляет game_state всем подключенным клиентам через WebSocket.
     """
     if connected_clients:
         for client in connected_clients:
-            await client.send(str(game_state.snakes))
+            await client.send(visual_data)
 
 async def websocket_server(websocket):
     """
@@ -40,6 +41,7 @@ async def websocket_server(websocket):
     finally:
         # Удаляем клиента при отключении
         connected_clients.remove(websocket)
+
 
 async def main():
     # Запускаем WebSocket-сервер
@@ -59,8 +61,12 @@ async def main():
                 # 2. Отправить запрос на передвижение
                 await game_api.put_direction(payload=give_direction)
 
+                #Преобразование game_state
+                visual_data = convert_data_for_visual(game_state)
+                json_visual_data = json.dumps(visual_data)
+
                 # 3. Отправить game_state через WebSocket
-                await send_game_state(game_state)
+                await send_game_state(json_visual_data)
 
                 # 4. Подождать оставшееся время до конца хода
                 remaining_time = game_state.tick_remain_ms

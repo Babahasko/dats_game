@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Visualization</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Создание сцены
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Добавление освещения
+        const light = new THREE.DirectionalLight(0xffffff, 1);
+        light.position.set(1, 1, 1).normalize();
+        scene.add(light);
+
+        // Функция для создания объектов
+        function createObject(points, color) {
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
+            const material = new THREE.PointsMaterial({ color: color, size: 5 });
+            return new THREE.Points(geometry, material);
+        }
+
+        // Инициализация объектов
+        let food, enemies, snakes, obstacles;
+
+        // Функция для обновления данных
+        function updateData(data) {
+            // Удаление старых объектов
+            if (food) scene.remove(food);
+            if (enemies) scene.remove(enemies);
+            if (snakes) scene.remove(snakes);
+            if (obstacles) scene.remove(obstacles);
+
+            // Создание новых объектов
+            food = createObject(data.food.map(p => new THREE.Vector3(p[0], p[1], p[2])), 0x00ff00);
+            enemies = createObject(data.enemies.map(p => new THREE.Vector3(p[0], p[1], p[2])), 0xff0000);
+            snakes = createObject(data.snakes.map(p => new THREE.Vector3(p[0], p[1], p[2])), 0x0000ff);
+            obstacles = createObject(data.obstacles.map(p => new THREE.Vector3(p[0], p[1], p[2])), 0x000000);
+
+            // Добавление объектов на сцену
+            scene.add(food);
+            scene.add(enemies);
+            scene.add(snakes);
+            scene.add(obstacles);
+        }
+
+        // Подключение к WebSocket
+        const socket = new WebSocket('ws://localhost:8765');
+        socket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            updateData(data);
+        };
+
+        // Анимация
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+
+        // Настройка камеры
+        camera.position.z = 300;
+        animate();
+    </script>
+</body>
+</html>

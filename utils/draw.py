@@ -1,5 +1,6 @@
 import plotly.graph_objs as go
 from utils import logger
+import itertools
 
 def create_data_for_visualize(snakes): # fences, food, enemies, special_food
     data = []
@@ -104,3 +105,19 @@ def create_cube(x, y, z, size, color):
         opacity=1  # Полная непрозрачность
     )
     return cube
+
+
+def convert_data_for_visual(game_state):
+    snakes_geometry = [snake['geometry'] for snake in game_state.snakes]
+    result_snakes = list(itertools.chain(*snakes_geometry))
+    enemies_geometry = [enemie['geometry'] for enemie in game_state.enemies]
+    result_enemies = list(itertools.chain(*enemies_geometry))
+    food_c = [food['c'] for food in game_state.food]
+    result = {
+        "map_size": game_state.map_size,
+        "food": food_c,
+        "enemies": result_enemies,
+        "snakes": result_snakes,
+        "fences": game_state.fences,
+    }
+    return result

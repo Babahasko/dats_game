@@ -1,33 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>WebSocket JSON Client</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game State Viewer</title>
 </head>
 <body>
-    <h1>WebSocket JSON Client</h1>
-    <pre id="output"></pre>
+    <h1>Game State</h1>
+    <pre id="game-state"></pre>
 
     <script>
-        // Подключаемся к WebSocket серверу
-        const socket = new WebSocket('ws://localhost:8765');
+        const ws = new WebSocket("ws://localhost:8765");
 
-        // Обрабатываем входящие сообщения
-        socket.onmessage = function (event) {
-            // Преобразуем полученную строку в JSON
-            const jsonData = JSON.parse(event.data);
-
-            // Отображаем JSON данные в браузере
-            document.getElementById('output').textContent = JSON.stringify(jsonData, null, 2);
+        ws.onmessage = (event) => {
+            const gameState = JSON.parse(event.data);
+            document.getElementById("game-state").innerText = JSON.stringify(gameState, null, 2);
         };
 
-        // Обрабатываем ошибки WebSocket
-        socket.onerror = function (error) {
-            console.error('WebSocket error:', error);
+        ws.onopen = () => {
+            console.log("Connected to WebSocket server");
         };
 
-        // Обрабатываем закрытие соединения
-        socket.onclose = function () {
-            console.log('WebSocket connection closed');
+        ws.onclose = () => {
+            console.log("Disconnected from WebSocket server");
         };
     </script>
 </body>
