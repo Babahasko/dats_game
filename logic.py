@@ -45,7 +45,8 @@ def get_directions_for_snakes(game_state):
 
             # Находим ближайшую еду
             # logger.debug(game_state.food)
-            result = [item['c'] for item in game_state.food]
+            result = [{'c': item['c'], 'points': item['points']} for item in game_state.food if item['points'] > 0]
+            result = [item['c'] for item in result]
             # logger.info(result)
             nearest_food = find_nearest_food(snake_position, result)
 
