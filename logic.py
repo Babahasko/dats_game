@@ -1,18 +1,24 @@
-# test #
+from utils import logger
 def get_directions_for_snakes(game_state):
     moves = {"snakes": []}
-    for index, snake in enumerate(game_state.snakes):
-        # snake_position = game_state.snakes
-        snake_position = snake['direction']
-        food_position = game_state.food[0]['c']
-        fences = game_state.fences
-        players = game_state.enemies
-        direction = choose_direction(snake_position, food_position, fences, players)
+    try:
+        for index, snake in enumerate(game_state.snakes):
+            snake_position = game_state.snakes[index]['geometry']
+            snake_position = snake_position[0]
+            # logger.info(snake_position)
+            food_position = game_state.food[0]['c']
+            fences = game_state.fences
+            players = game_state.enemies
+            direction = choose_direction(snake_position, food_position, fences, players)
 
-        moves["snakes"].append({
-            "id": snake['id'],
-            "direction": [direction['x'], direction['y'], direction['z']]
-        })
+            moves["snakes"].append({
+                "id": snake['id'],
+                "direction": [direction['x'], direction['y'], direction['z']]
+            })
+    except Exception as e:
+        pass
+        # logger.error(e)
+        print(e)
     return moves
 
 # Функция для получения текущего состояния игры
@@ -45,6 +51,7 @@ def choose_direction(snake_position, food_position, fences, players):
         'y': food_position[1] - snake_position[1],
         'z': food_position[2] - snake_position[2]
     }
+
 
     # Определяем возможные направления движения
     possible_directions = [
